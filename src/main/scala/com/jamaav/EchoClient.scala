@@ -18,7 +18,7 @@ object EchoClient {
     client(msg) onSuccess { result =>
       //println("Returned " + result)
     } onFailure { error =>
-      //println("Returned " + error)
+      println("Returned " + error)
     } ensure {
       // All done! Close TCP connection(s):
       client.close()

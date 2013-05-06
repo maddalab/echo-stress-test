@@ -15,15 +15,20 @@ object SmackEchoServer {
 
     val threadCounts = Seq(2, 4, 8)
     for (threadCount <- threadCounts) {
+      println("Iteration starting for thread count " + threadCount)
       benchmark.iterations(10000).concurrent(threadCount).aggregateTiming.bench({
         client.send("Hello")
       })
+      println("Iteration complete for thread count " + threadCount)
     }
 
     val reportFormat = ReportStructure("echo-server-test", Seq(
       metrics("*", Seq(walltime, total, count, throughput))))
 
     println((new ReportSummaryGenerator(ReportGenerator(reportFormat, reporter).generate())).generate())
-
+  }
+  
+  def main(args:Array[String])  {
+    SmackEchoServer.benchmark()
   }
 }

@@ -19,8 +19,8 @@ object EchoServer {
     }
     
     val thresholds = OpenConnectionsThresholds(
-		lowWaterMark = 10,
-		highWaterMark = 200,
+		lowWaterMark = 500,
+		highWaterMark = 2000,
 		idleTimeout = 5 seconds
     )
 
@@ -29,7 +29,7 @@ object EchoServer {
       .codec(StringCodec)
       .bindTo(new InetSocketAddress(8080))
       .name("echoserver")
-      .openConnectionsThresholds(thresholds)
+      //.openConnectionsThresholds(thresholds)
       .build(service)
   }
 }
