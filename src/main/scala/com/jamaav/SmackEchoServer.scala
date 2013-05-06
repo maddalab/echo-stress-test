@@ -13,10 +13,10 @@ object SmackEchoServer {
     val benchmark = Benchpress("conc-echo-server-test", reporter)
     val client = EchoClient
 
-    val threadCounts = Seq(2, 4, 8)
+    val threadCounts = Seq(30, 60, 120)
     for (threadCount <- threadCounts) {
       println("Iteration starting for thread count " + threadCount)
-      benchmark.iterations(10000).concurrent(threadCount).aggregateTiming.bench({
+      benchmark.iterations(100000).concurrent(threadCount).aggregateTiming.bench({
         client.send("Hello")
       })
       println("Iteration complete for thread count " + threadCount)

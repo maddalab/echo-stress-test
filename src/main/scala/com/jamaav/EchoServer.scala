@@ -19,9 +19,9 @@ object EchoServer {
     }
     
     val thresholds = OpenConnectionsThresholds(
-		lowWaterMark = 500,
-		highWaterMark = 2000,
-		idleTimeout = 5 seconds
+      lowWaterMark = 50,
+      highWaterMark = 2000,
+      idleTimeout = 5 seconds
     )
 
     // Bind the service to port 8080
