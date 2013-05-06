@@ -6,8 +6,10 @@ import com.twitter.util.Future
 import java.net.InetSocketAddress
 import com.twitter.finagle.builder.{Server, ServerBuilder}
 import com.twitter.finagle.channel.OpenConnectionsThresholds
+import java.util.concurrent.atomic.AtomicLong
 
 object EchoServer {
+  val count = new AtomicLong(0)
   def start() = {
     /**
      * A very simple service that simply echos its request back
@@ -15,7 +17,10 @@ object EchoServer {
      * in Finagle is asynchronous.
      */
     val service = new Service[String, String] {
-      def apply(request: String) = Future.value(request)
+      def apply(request: String) = {
+        count.incrementAndGet()
+        Future.value(request)
+      }
     }
     
     val thresholds = OpenConnectionsThresholds(
