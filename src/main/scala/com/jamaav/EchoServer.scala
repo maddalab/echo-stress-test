@@ -38,19 +38,7 @@ object EchoServer {
       .bindTo(new InetSocketAddress(8080))
       .name("echoserver")
       .openConnectionsThresholds(thresholds)
-      .logChannelActivity(true)
-      .logger(logger)
+      //.logChannelActivity(true)
       .build(service)
-  }
-
-  def logger = {
-    val log = Logger.getLogger("my.logger");
-    log.setLevel(Level.ALL);
-    val handler = new ConsoleHandler();
-    handler.setFormatter(new SimpleFormatter());
-    handler.setLevel(Level.ALL)
-    log.addHandler(handler);
-    log.fine("logging to console");
-    log
   }
 }
