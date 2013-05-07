@@ -17,7 +17,7 @@ object EchoClient {
     // Construct a client, and connect it to localhost:8080
     val client: Service[String, String] = ClientBuilder()
       .codec(StringCodec)
-      .hosts(new InetSocketAddress(8080))
+      .hosts(new InetSocketAddress("t.dev", 8080))
       .hostConnectionLimit(20)
       .logger({
         val log = Logger.getLogger("")
