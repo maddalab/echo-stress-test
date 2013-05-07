@@ -18,7 +18,7 @@ object EchoClient {
     val client: Service[String, String] = ClientBuilder()
       .codec(StringCodec)
       .hosts(new InetSocketAddress(8080))
-      .hostConnectionLimit(5000)
+      .hostConnectionLimit(20)
       .logger({
         val log = Logger.getLogger("")
         log.setLevel(Level.WARNING)
@@ -29,7 +29,6 @@ object EchoClient {
         log.info("Logging to console")
         log
       })
-      .keepAlive(false)
       .build()
 
     // Issue a newline-delimited request, respond to the result

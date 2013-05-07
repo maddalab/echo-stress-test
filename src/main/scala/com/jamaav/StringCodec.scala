@@ -20,6 +20,11 @@ class StringCodec extends CodecFactory[String, String] {
           pipeline
         }
       }
+      
+      override def prepareConnFactory(factory: ServiceFactory[String, String]) = {
+        //println("preparing connection factory on server")
+        factory
+      }
     }
   }
 
@@ -34,8 +39,10 @@ class StringCodec extends CodecFactory[String, String] {
         }
       }
 
-      override def prepareConnFactory(factory: ServiceFactory[String, String]) =
+      override def prepareConnFactory(factory: ServiceFactory[String, String]) = {
+    	//println("preparing connection factory")
         (new AddNewlineFilter) andThen factory
+      }
     }
   }
 
