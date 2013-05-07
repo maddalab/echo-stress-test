@@ -1,11 +1,17 @@
 package com.jamaav
 
+import java.util.concurrent.atomic.AtomicInteger
+
 import com.tumblr.benchmark.benchmarking.Benchpress
 import com.tumblr.benchmark.reporting.BenchmarkReportingBase
-import com.tumblr.benchmark.reporting.ReportSummaryGenerator
 import com.tumblr.benchmark.reporting.ReportGenerator
+import com.tumblr.benchmark.reporting.ReportMarkup.count
+import com.tumblr.benchmark.reporting.ReportMarkup.metrics
+import com.tumblr.benchmark.reporting.ReportMarkup.throughput
+import com.tumblr.benchmark.reporting.ReportMarkup.total
+import com.tumblr.benchmark.reporting.ReportMarkup.walltime
 import com.tumblr.benchmark.reporting.ReportStructure
-import com.tumblr.benchmark.reporting.ReportMarkup._
+import com.tumblr.benchmark.reporting.ReportSummaryGenerator
 
 object SmackEchoServer {
   def benchmark() {

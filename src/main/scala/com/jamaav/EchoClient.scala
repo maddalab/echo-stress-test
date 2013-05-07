@@ -4,6 +4,10 @@ import com.twitter.finagle.builder.ClientBuilder
 import java.net.InetSocketAddress
 import com.twitter.finagle.Service
 import java.util.concurrent.atomic.AtomicLong
+import java.util.logging.Logger
+import java.util.logging.Level
+import java.util.logging.ConsoleHandler
+import java.util.logging.SimpleFormatter
 
 object EchoClient {
   val failures = new AtomicLong(0)
@@ -15,6 +19,17 @@ object EchoClient {
       .codec(StringCodec)
       .hosts(new InetSocketAddress(8080))
       .hostConnectionLimit(5000)
+      .logger({
+        val log = Logger.getLogger("")
+        log.setLevel(Level.WARNING)
+        val handler = new ConsoleHandler()
+        handler.setFormatter(new SimpleFormatter())
+        handler.setLevel(Level.WARNING)
+        log.addHandler(handler)
+        log.info("Logging to console")
+        log
+      })
+      .keepAlive(false)
       .build()
 
     // Issue a newline-delimited request, respond to the result
