@@ -6,7 +6,6 @@ import java.util.logging.ConsoleHandler
 import java.util.logging.Level
 import java.util.logging.Logger
 import java.util.logging.SimpleFormatter
-
 import org.jboss.netty.buffer.ChannelBuffers.copiedBuffer
 import org.jboss.netty.handler.codec.http.DefaultHttpResponse
 import org.jboss.netty.handler.codec.http.HttpRequest
@@ -14,13 +13,13 @@ import org.jboss.netty.handler.codec.http.HttpResponse
 import org.jboss.netty.handler.codec.http.HttpResponseStatus.OK
 import org.jboss.netty.handler.codec.http.HttpVersion.HTTP_1_1
 import org.jboss.netty.util.CharsetUtil.UTF_8
-
 import com.twitter.conversions.time.intToTimeableNumber
 import com.twitter.finagle.Service
 import com.twitter.finagle.builder.ServerBuilder
 import com.twitter.finagle.channel.OpenConnectionsThresholds
 import com.twitter.finagle.http.Http
 import com.twitter.util.Future
+import com.twitter.finagle.stats.JavaLoggerStatsReceiver
 
 object HttpServer {
   val count = new AtomicLong(0)
@@ -45,16 +44,22 @@ object HttpServer {
     ServerBuilder()
       .codec(Http())
       .bindTo(new InetSocketAddress(8080))
-      .name("echoserver")
-      //.openConnectionsThresholds(thresholds)
+      .name("httpserver")
+      .openConnectionsThresholds(thresholds)
+      .reportTo(JavaLoggerStatsReceiver())
       .logger({
         val log = Logger.getLogger("")
-        log.setLevel(Level.WARNING)
-        val handler = new ConsoleHandler()
-        handler.setFormatter(new SimpleFormatter())
-        handler.setLevel(Level.WARNING)
-        log.addHandler(handler)
-        log.info("Logging to console")
+        val slog = Logger.getLogger("Finagle")
+        slog.addHandler({
+          val handler = new ConsoleHandler()
+          handler.setFormatter(new SimpleFormatter())
+          handler.setLevel(Level.ALL)
+          handler
+        })
+        slog.setLevel(Level.ALL)
+        println("Attempting print to console")
+        slog.info("stat logger configured for maximum effect")
+        log.info("All loggers configured for maximum effect")
         log
       })
       .logChannelActivity(false)

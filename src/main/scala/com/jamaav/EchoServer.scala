@@ -11,6 +11,7 @@ import com.twitter.util.Future
 import java.util.logging.Level
 import java.util.logging.ConsoleHandler
 import java.util.logging.SimpleFormatter
+import com.twitter.finagle.stats.JavaLoggerStatsReceiver
 
 object EchoServer {
   val count = new AtomicLong(0)
@@ -23,8 +24,8 @@ object EchoServer {
     }
 
     val thresholds = OpenConnectionsThresholds(
-      lowWaterMark = 500,
-      highWaterMark = 2000,
+      lowWaterMark = 1,
+      highWaterMark = 2,
       idleTimeout = 5 seconds)
 
     // Bind the service to port 8080
@@ -32,15 +33,28 @@ object EchoServer {
       .codec(StringCodec)
       .bindTo(new InetSocketAddress(8080))
       .name("echoserver")
-      //.openConnectionsThresholds(thresholds)
+      .reportTo(JavaLoggerStatsReceiver())
+      .openConnectionsThresholds(thresholds)
       .logger({
         val log = Logger.getLogger("")
-        log.setLevel(Level.WARNING)
-        val handler = new ConsoleHandler()
-        handler.setFormatter(new SimpleFormatter())
-        handler.setLevel(Level.WARNING)
-        log.addHandler(handler)
-        log.info("Logging to console")
+        val slog = Logger.getLogger("Finagle")
+        log.addHandler({
+          val handler = new ConsoleHandler()
+          handler.setFormatter(new SimpleFormatter())
+          handler.setLevel(Level.ALL)
+          handler
+        })
+        slog.addHandler({
+          val handler = new ConsoleHandler()
+          handler.setFormatter(new SimpleFormatter())
+          handler.setLevel(Level.ALL)
+          handler
+        })
+        log.setLevel(Level.ALL)
+        slog.setLevel(Level.ALL)
+        println("Attempting print to console")
+        slog.info("stat logger configured for maximum effect")
+        log.info("All loggers configured for maximum effect")
         log
       })
       .logChannelActivity(false)
